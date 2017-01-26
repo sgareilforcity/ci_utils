@@ -59,7 +59,7 @@ def main():
     except getopt.error, msg:
         print msg
         print "for help use --help"
-        sys.exit(2)
+        sys.exit(418)
     # process options
     for opt, arg in opts:
         #print "o :" + opt + " a :" + arg
@@ -107,7 +107,7 @@ def main():
         print "the command line using the -r parameter, by specifying either a remote or"
         print "the full repository name (user/repo), or configure it using"
         print "git config github.repo <user>/<repository>"
-        sys.exit(1)
+        sys.exit(418)
 
     # process arguments
     if len(args):
