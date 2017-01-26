@@ -52,14 +52,14 @@ def get_strings_of_set(word, char_set, threshold=20):
     return strings
 
 class bcolors:
-    HEADER = ''
-    OKBLUE = ''
-    OKGREEN = ''
-    WARNING = ''
-    FAIL = ''
-    ENDC = '<br/>'
-    BOLD = ''
-    UNDERLINE = '<br/><br/>'
+    EOL = '<br/>'
+    OKBLUE = '<p style="color:blue;">'
+    OKGREEN = '<p style="color:green;">'
+    WARNING =  '<p style="color:orange;">'
+    FAIL = '<p style="color:red;">'
+    ENDC = '</p>'
+
+
 
 def find_strings(git_url):
     project_path = tempfile.mkdtemp()
@@ -90,6 +90,7 @@ def find_strings(git_url):
                 already_searched.add(hashes)
 
                 diff = prev_commit.diff(curr_commit, create_patch=True)
+
                 for blob in diff:
                     #print i.a_blob.data_stream.read()
                     printableDiff = blob.diff.decode()
@@ -98,6 +99,7 @@ def find_strings(git_url):
                     foundSomething = False
                     lines = blob.diff.decode().split("\n")
                     for line in lines:
+                        line = bcolors.EOL + line
                         for word in line.split():
                             base64_strings = get_strings_of_set(word, BASE64_CHARS)
                             hex_strings = get_strings_of_set(word, HEX_CHARS)
