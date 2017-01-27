@@ -53,11 +53,11 @@ def get_strings_of_set(word, char_set, threshold=20):
 
 class bcolors:
     EOL = '<br/>'
-    OKBLUE = '<p style="color:blue;">'
-    OKGREEN = '<p style="color:green;">'
-    WARNING =  '<p style="color:orange;">'
-    FAIL = '<p style="color:red;">'
-    ENDC = '</p>'
+    OKBLUE = '<font color="blue">'
+    OKGREEN = '<font color="green">'
+    WARNING =  '<font color="orange">'
+    FAIL = '<font color="red">'
+    ENDC = '</font>'
 
 
 
