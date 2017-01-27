@@ -55,7 +55,7 @@ class bcolors:
     EOL = '<br/>'
     OKBLUE = '<font color="blue">'
     OKGREEN = '<font color="green">'
-    WARNING =  '<font color="orange">'
+    WARNING = '<font color="orange">'
     FAIL = '<font color="red">'
     ENDC = '</font>'
 
@@ -93,32 +93,33 @@ def find_strings(git_url):
 
                 for blob in diff:
                     #print i.a_blob.data_stream.read()
-                    printableDiff = blob.diff.decode()
-                    if printableDiff.startswith("Binary files"):
+                    printable_diff = blob.diff.decode()
+                    if printable_diff.startswith("Binary files"):
                         continue
-                    foundSomething = False
+                    found_something = False
                     lines = blob.diff.decode().split("\n")
                     for line in lines:
-                        print(bcolors.EOL)
+
                         for word in line.split():
                             base64_strings = get_strings_of_set(word, BASE64_CHARS)
                             hex_strings = get_strings_of_set(word, HEX_CHARS)
                             for string in base64_strings:
-                                b64Entropy = shannon_entropy(string, BASE64_CHARS)
-                                if b64Entropy > 4.5:
-                                    foundSomething = True
-                                    printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
+                                b64_entropy = shannon_entropy(string, BASE64_CHARS)
+                                if b64_entropy > 4.5:
+                                    found_something = True
+                                    printable_diff = printable_diff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
                             for string in hex_strings:
-                                hexEntropy = shannon_entropy(string, HEX_CHARS)
-                                if hexEntropy > 3:
-                                    foundSomething = True
-                                    printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
-                    if foundSomething:
-                        commit_time =  datetime.datetime.fromtimestamp(prev_commit.committed_date).strftime('%Y-%m-%d %H:%M:%S')
+                                hex_entropy = shannon_entropy(string, HEX_CHARS)
+                                if hex_entropy > 3:
+                                    found_something = True
+                                    printable_diff = printable_diff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
+                    if found_something:
+                        commit_time = datetime.datetime.fromtimestamp(prev_commit.committed_date).strftime('%Y-%m-%d %H:%M:%S')
+                        print(bcolors.EOL)
                         print(bcolors.OKGREEN + "Date: " + commit_time + bcolors.ENDC)
                         print(bcolors.OKGREEN + "Branch: " + branch_name + bcolors.ENDC)
                         print(bcolors.OKGREEN + "Commit: " + prev_commit.message + bcolors.ENDC)
-                        print(printableDiff)
+                        print(printable_diff)
                     
             prev_commit = curr_commit
     return project_path
