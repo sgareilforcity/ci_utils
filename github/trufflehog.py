@@ -99,7 +99,7 @@ def find_strings(git_url):
                     foundSomething = False
                     lines = blob.diff.decode().split("\n")
                     for line in lines:
-                        line = bcolors.EOL + line
+                        print(bcolors.EOL)
                         for word in line.split():
                             base64_strings = get_strings_of_set(word, BASE64_CHARS)
                             hex_strings = get_strings_of_set(word, HEX_CHARS)
