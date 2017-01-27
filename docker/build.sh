@@ -48,4 +48,5 @@ for imagename in $catalog; do
         echo "Done building %docker_registry%/$imagename"
         echo "##############################################"
 
+
 done
