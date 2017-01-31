@@ -178,7 +178,7 @@ def show(repo, token, base, number):
     print "pullrequest number param : %s " % number
     for pr in data:
         print "pullrequest number git : %s "  % pr['number']
-        founded |= display(pr,base)==0 and pr['number'] == number
+        founded |= display(pr,base)==0 and str(pr['number']) == str(number)
 
     if founded:
         print "a good Pull Request existing."
