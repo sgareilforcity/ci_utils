@@ -112,6 +112,12 @@ def main():
         print "git config github.repo <user>/<repository>"
         sys.exit(418)
 
+    if (number != None and number != '' ):
+        number = int(filter(str.isdigit, number))
+        if(number == ''):
+            print "not a pull request detected : %s " % number
+            sys.exit(0)
+
     # process arguments
     ret = show(repo, token, base, number)
 
