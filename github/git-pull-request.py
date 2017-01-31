@@ -176,8 +176,7 @@ def show(repo, token, base, number):
     # print json.dumps(data,sort_keys=True, indent=4)
     founded = False
     for pr in data:
-        if pr['number'] == number :
-            founded |= display(pr,base)==0
+        founded |= display(pr,base)==0 and pr['number'] == number
 
     if founded:
         print "a good Pull Request existing."
