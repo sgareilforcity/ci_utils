@@ -1,4 +1,5 @@
 #!/bin/bash
+# sed -i -r "s,FROM %docker_registry%/(.*):latest,FROM %docker_registry%/\1:$version,g" ./Dockerfile_tmp
 catalog=$(cat catalog)
 docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
 dependency_branch=$(echo "%dep.Lumis_Lumis.teamcity.build.branch%" | sed "s,refs/heads/,,g" | sed "s,refs/tags/,,g")

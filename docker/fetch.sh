@@ -13,7 +13,7 @@ else
 fi
 
 docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
-tag= $(echosh extracttag.sh "%teamcity.build.branch%")
+tag= $(echo sh extracttag.sh "%teamcity.build.branch%")
 
 for imagename in $catalog; do
     if [ -d "$imagename" ]; then

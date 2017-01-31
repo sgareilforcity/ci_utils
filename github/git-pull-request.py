@@ -183,7 +183,7 @@ def show(repo, token, base, number):
         print "a good Pull Request existing."
         return 0
     else:
-        print "No open pull request %n " % number
+        print "No open pull request %s " % number
         print "on the repository %s is existing." % repo
         return 418
 
