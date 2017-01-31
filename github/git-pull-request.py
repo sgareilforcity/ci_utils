@@ -56,7 +56,7 @@ def main():
     number = None
     # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:r:t:b:p:", ["help", "repo=", "token=", "base=", "number="])
+        opts, args = getopt.getopt(sys.argv[1:], "h:r:t:b:n:", ["help", "repo=", "token=", "base=", "number="])
     except getopt.error, msg:
         print msg
         print "for help use --help"
