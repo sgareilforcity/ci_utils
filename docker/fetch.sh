@@ -1,18 +1,23 @@
 #!/bin/bash
-catalog=$(cat catalog)
-docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
-if [ "%teamcity.build.branch%" == "master" ]; then
-    version="latest"
+#1 : catalog name if not filed
+
+if[ -n catalog];then
+    catalog=$(cat catalog)
 else
-    version="%teamcity.build.branch%"
+    if[ -n $1];then
+        catalog=$1
+    else
+        echo "catalog of image not found"
+        exit 418
+    fi
 fi
 
+docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
+tag= $(echosh extracttag.sh "%teamcity.build.branch%")
+
 for imagename in $catalog; do
-    imagepath=$(echo $imagename|sed "s,@,/,g")
-    imagename=$(echo $imagename|sed "s/@/_/g")
-    if [ -d "$imagepath" ]; then
-        echo "fetching %docker_registry%/$imagename:$version"
-        tag=$(echo "$version" | sed "s,/,-,g")
+    if [ -d "$imagename" ]; then
+        echo "fetching %docker_registry%/$imagename:$tag"
         docker pull %docker_registry%/$imagename:$tag
     fi
 done

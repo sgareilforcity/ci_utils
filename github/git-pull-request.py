@@ -53,9 +53,10 @@ import pipes
 def main():
     repo, remote = '', None
     base, token = '', None
+    number = None
     # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:r:t:b:", ["help", "repo=", "token=", "base="])
+        opts, args = getopt.getopt(sys.argv[1:], "h:r:t:b:p:", ["help", "repo=", "token=", "base=", "number="])
     except getopt.error, msg:
         print msg
         print "for help use --help"
@@ -75,6 +76,8 @@ def main():
             token = arg
         elif opt in ("-b", "--base"):
             base = arg
+        elif opt in ("-n", "--number"):
+            number = arg
         else:
             print __doc__
             sys.exit(0)
@@ -110,10 +113,7 @@ def main():
         sys.exit(418)
 
     # process arguments
-    if len(args):
-        ret = fetch(repo, token, args[0])
-    else:
-        ret = show(repo, token, base)
+    ret = show(repo, token, base, number)
 
     sys.exit(ret)
 
@@ -136,7 +136,7 @@ def display(pr,base):
     print "validity : %s " % (result)
     return result
 
-def show(repo, token, base):
+def show(repo, token, base, number):
     """List open pull requests
 
     Queries the github API for open pull requests in the current repo
@@ -170,80 +170,16 @@ def show(repo, token, base):
     # print json.dumps(data,sort_keys=True, indent=4)
     founded = False
     for pr in data:
-        founded |= display(pr,base)==0
+        if pr['number'] == number :
+            founded |= display(pr,base)==0
 
     if founded:
         print "a good Pull Request existing."
         return 0
     else:
-        print "No open pull request on the repository %s is existing." % repo
+        print "No open pull request %n " % number
+        print "on the repository %s is existing." % repo
         return 418
-
-
-def fetch(repo, token, pullreq):
-    print "loading pull request info for request %s..." % (pullreq)
-    print
-    url = "https://api.github.com/repos/%s/pulls/%s" % (repo, pullreq)
-
-    if len(token):
-        headers = {'User-Agent': 'git-pull-request', 'Authorization': 'token %s' % token}
-    else:
-        headers = {'User-Agent': 'git-pull-request'}
-
-    req = urllib2.Request(
-        url, headers=headers)
-    try:
-        response = urllib2.urlopen(req)
-    except urllib2.HTTPError, msg:
-        print "error loading pull requests for repo %s: %s" % (repo, msg)
-        if msg.code == 404:
-            # GH replies with 404 when a repo is not found or private and we request without OAUTH
-            print "if this is a private repo, please set github.token to a valid GH oauth token"
-        exit(1)
-
-    data = response.read()
-    if (data == ''):
-        print "failed to speak with github."
-        return 3
-
-    data = json.loads(data)
-    pr = data
-    print json.dumps(pr, sort_keys=True, indent=4, separators=(',', ': '))
-    if pr['head']['repo'] is None:
-        print("remote repository for this pull request "
-              "does not exist anymore.")
-        return 6
-    display(pr)
-
-    local = pipes.quote('pull-request-%s' % (pullreq))
-    branch = os.popen("git branch|grep '^*'|awk '{print $2}'").read().strip()
-    if(branch != pr['base']['ref'] and branch != local):
-        print color_text("The pull request is based on branch '%s' but you're on '%s' currently" % (pr['base']['ref'], branch), 'red', True)
-        return 4
-
-    ret = os.system('git branch %s' % (local))
-    ret = os.system('git checkout %s' % (local))
-    if(ret != 0):
-        print "Failed to create/switch branch"
-        return 5
-
-    print "pulling from %s (%s)" % (pr['head']['repo']['git_url'], pr['head']['ref'])
-
-    git_url = pipes.quote(pr['head']['repo']['git_url'])
-    ref = pipes.quote(pr['head']['ref'])
-    print 'git pull %s %s' % (git_url, ref)
-    ret = os.system('git pull %s %s' % (git_url, ref))
-    if(ret != 0):
-        print color_text("branch %s no longer exists." % ref, 'red')
-        os.system('git checkout %s' % branch)
-        os.system('git branch -D %s' % local)
-        exit(1)
-
-    print
-    print color_text("done. examine changes and merge into master if good", 'green')
-
-    return 0
-
 
 def color_text(text, color_name, bold=False):
     """Return the given text in ANSI colors
