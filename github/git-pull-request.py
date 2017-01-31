@@ -113,7 +113,7 @@ def main():
         sys.exit(418)
 
     if (number != None and number != '' ):
-        number = int(filter(str.isdigit, number))
+        number = filter(str.isdigit, number)
         if(number == ''):
             print "not a pull request detected : %s " % number
             sys.exit(0)
