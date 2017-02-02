@@ -1,19 +1,10 @@
 #!/bin/bash
 #1 : catalog name if not filed
 
-if[ -n catalog];then
-    catalog=$(cat catalog)
-else
-    if[ -n $1 ];then
-        catalog=$1
-    else
-        echo "catalog of image not found"
-        exit 418
-    fi
-fi
 
 docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
-tag= $(echo sh extracttag.sh "%teamcity.build.branch%")
+catalog= $(echo sh extract_catalog.sh $1)
+tag= $(echo sh extract_tag.sh "%teamcity.build.branch%")
 
 for imagename in $catalog; do
     if [ -d "$imagename" ]; then
@@ -21,4 +12,5 @@ for imagename in $catalog; do
         docker pull %docker_registry%/$imagename:$tag
     fi
 done
+
 exit 0

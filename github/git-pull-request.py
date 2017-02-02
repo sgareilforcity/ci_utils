@@ -111,7 +111,7 @@ def main():
         print "git config github.repo <user>/<repository>"
         sys.exit(418)
 
-    if (number != None and number != '' and number.startswith("refs/pull", beg=0,end=len(number))):
+    if (number != None and number != '' and number.startswith("refs/pull")):
         number = filter(str.isdigit, number)
         if(number == ''):
             print "not a pull request detected : %s " % number

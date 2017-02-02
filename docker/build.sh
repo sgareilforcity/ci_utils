@@ -1,54 +1,44 @@
 #!/bin/bash
-# sed -i -r "s,FROM %docker_registry%/(.*):latest,FROM %docker_registry%/\1:$version,g" ./Dockerfile_tmp
-catalog=$(cat catalog)
+# Build articacts directory
+
+# Log into docker registry
 docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
+imagename=$1
+tag=$(echo sh extract_tag.sh "%teamcity.build.branch%")
 
-for imagename in $catalog; do
+   # Check the image dir exists
+    if [ -d "$imagename" ]; then
+        # Move artifacts into this directory
+        mv %system.teamcity.build.checkoutDir%/artifacts "$imagename/"
 
-    imagepath=$(echo $imagename|sed "s,@,/,g")
-    imagename=$(echo $imagename|sed "s/@/_/g")
-    logname=$(echo $imagename|sed "s,/,_,g")
-
-    if [ -d "$imagepath" ]; then
-        if [ "$dependency_branch" == "master" ]; then
-            version="build-%build.number%"
-            tags="latest build-%build.number%"
-        else
-            version=$(echo "$dependency_branch" | sed "s,release/,,g" | sed "s,/,-,g")
-            tags="$version"
-        fi
-
+        # update teamcity progress bar
         echo "##teamcity[progressMessage 'Building image %docker_registry%/$imagename']"
-        echo "##############################################"
-        echo "building %docker_registry%/$imagename:$tags"
-        echo "##############################################"
-        echo ""
-        cd $imagepath
-        sed "s,%%version%%,$version,g" Dockerfile > ./Dockerfile_tmp
 
-        sed -i "s,%%branch%%,$dependency_branch,g" ./Dockerfile_tmp
-        sed -i "s,%%revision%%,%dep.Lumis_Lumis.build.vcs.number.Lumis_Lumis%,g" ./Dockerfile_tmp
-        cat Dockerfile_tmp
-        docker build --no-cache --build-arg LUMIS_BRANCH="$dependency_branch" -t %docker_registry%/$imagename -f Dockerfile_tmp . > $logname.buildlog.txt 2>&1
-        echo "##teamcity[publishArtifacts '$imagepath/$logname.buildlog.txt']"
+        cd $imagename
+
+        # dynamically replace "auto_version" in FROM line with target tag
+        sed -r "s,FROM %docker_registry%/(.*):auto_version,FROM %docker_registry%/\1:$tag,g" Dockerfile > ./Dockerfile_tmp
+
+        # build docker image
+        imghash=$(docker build -t %docker_registry%/$imagename -f Dockerfile_tmp .)
         result=$?
         rm ./Dockerfile_tmp
-        imghash=$(tail -1 $logname.buildlog.txt | sed 's/.*Successfully built \(.*\)$/\1/')
+
+        # If docker building was unsuccesful, bail out
         if [ "$result" != "0" ]; then
             echo "##teamcity[message text='Error while building image $imagename' errorDetails='Error while building image $imagename' status='ERROR']"
-            echo "Error while building $imagename, check $logname.buildlog.txt"
+            echo "Error while building $imagename"
             exit 1
         fi
-        for tag in $tags; do
+        imghash=$(echo $imghash | tail -1 | sed 's/.*Successfully built \(.*\)$/\1/')
+        for tag in $tags;do
             echo "##teamcity[progressMessage 'tagging image %docker_registry%/$imagename with $tag']"
-            echo "tagging image %docker_registry%/$imagename ($imghash) with $tag"
+            echo "tagging image %docker_registry%/$imagename with $tag"
             docker tag $imghash %docker_registry%/$imagename:$tag
         done
         cd %teamcity.build.checkoutDir%
+        mv "$imagename/artifacts" %system.teamcity.build.checkoutDir%/
     fi
-        echo "##############################################"
-        echo "Done building %docker_registry%/$imagename"
-        echo "##############################################"
-
-
-done
+    echo "##############################################"
+    echo "Done building %docker_registry%/$imagename"
+    echo "##############################################"
