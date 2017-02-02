@@ -173,7 +173,7 @@ def show(repo, token, base, number):
 
     data = json.loads(data)
     # print json.dumps(data,sort_keys=True, indent=4)
-    founded = False
+    founded = str(number) == str("refs/heads/master") or str(number) == str("refs/heads/release-candidate") or number.startwith("refs/tags/")
     print "pullrequest number param : %s " % number
     for pr in data:
         print "pullrequest number git : %s "  % pr['number']
