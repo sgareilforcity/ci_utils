@@ -63,7 +63,6 @@ def main():
         sys.exit(418)
     # process options
     for opt, arg in opts:
-        #print "o :" + opt + " a :" + arg
         if opt in ("-h", "--help"):
             print __doc__
             sys.exit(0)
@@ -112,7 +111,7 @@ def main():
         print "git config github.repo <user>/<repository>"
         sys.exit(418)
 
-    if (number != None and number != '' ):
+    if (number != None and number != '' and number.startswith("refs/pull", beg=0,end=len(number))):
         number = filter(str.isdigit, number)
         if(number == ''):
             print "not a pull request detected : %s " % number

@@ -4,7 +4,7 @@
 if[ -n catalog];then
     catalog=$(cat catalog)
 else
-    if[ -n $1];then
+    if[ -n $1 ];then
         catalog=$1
     else
         echo "catalog of image not found"

@@ -2,12 +2,13 @@
 # sed -i -r "s,FROM %docker_registry%/(.*):latest,FROM %docker_registry%/\1:$version,g" ./Dockerfile_tmp
 catalog=$(cat catalog)
 docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
-dependency_branch=$(echo "%dep.Lumis_Lumis.teamcity.build.branch%" | sed "s,refs/heads/,,g" | sed "s,refs/tags/,,g")
-echo "DEPENDENCY BRANCH:$dependency_branch"
+
 for imagename in $catalog; do
+
     imagepath=$(echo $imagename|sed "s,@,/,g")
     imagename=$(echo $imagename|sed "s/@/_/g")
     logname=$(echo $imagename|sed "s,/,_,g")
+
     if [ -d "$imagepath" ]; then
         if [ "$dependency_branch" == "master" ]; then
             version="build-%build.number%"
