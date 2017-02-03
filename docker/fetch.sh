@@ -1,10 +1,13 @@
 #!/bin/bash
-#1 : catalog name if not filed
+#1 : image name of the artifact
+#2 : credential docker ex (-u %docker_login% -p "%docker_password%")
+#3 : registry docker ex (%docker_registry%)
+#4 : build branch ex (%teamcity.build.branch%)
 
-docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
-catalog=$(echo ./utils/extract_catalog.sh $1)
-tag= $(echo ./utils/extract_tag.sh "%teamcity.build.branch%")
-echo "fetching %docker_registry%/$imagename:$tag"
-docker pull %docker_registry%/$imagename:$tag
+docker login $2 https://$3
+
+tag= $(sh utils/extract_tag.sh $4)
+echo "fetching $3/$1:$tag"
+docker pull $3/$1:$tag
 
 exit 0
