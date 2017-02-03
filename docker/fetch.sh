@@ -6,7 +6,8 @@
 #3 : registry docker ex (%docker_registry%)
 #4 : build branch ex (%teamcity.build.branch%)
 #####################################################################
-sudo pip install shyaml -y
+sudo pip install shyaml
+ls -lisa
 image_name=$(cat artifact/docker/artifact.yml | shyaml get-value image_name)
 docker login $2 https://$3
 tag=$(sh utils/docker/extract_tag.sh $4)
