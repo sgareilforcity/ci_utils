@@ -3,7 +3,7 @@ if [ -d "%teamcity.build.checkoutDir%/ci-test" ]; then
 sudo easy_install -U pip
 sudo pip install --upgrade pip
 sudo pip install docker-compose
-echo "Working in %teamcity.build.checkoutDir%"
+echo "Working in $(pwd)"
 dependency_branch=$(echo "%dep.Lumis_Lumis.teamcity.build.branch%" | sed "s,refs/heads/,,g" | sed "s,refs/tags/,,g")
 if [ "$dependency_branch" == "master" ]; then
      tags="build-%build.number%"
