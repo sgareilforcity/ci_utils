@@ -8,7 +8,9 @@
 #####################################################################
 tag=$(sh utils/docker/extract_tag.sh "$4")
 docker login $2 https://$3
+ls -lisa
 cd artifacts
+ls -lisa
 imagename=$(cat docker/artifact.yml | shyaml get-value image.name)
 echo "##teamcity[progressMessage 'Building image $3/$imagename:$tag']"
 docker build -t $3/$imagename:$tag -f  docker/Dockerfile .
