@@ -5,7 +5,7 @@
 #4 : build branch ex (%teamcity.build.branch%)
 
 docker login $2 https://$3
-
+chmod -x utils/extract_tag.sh
 tag= $(sh utils/extract_tag.sh $4)
 echo "fetching $3/$1:$tag"
 docker pull $3/$1:$tag
