@@ -6,9 +6,8 @@
 #3 : registry docker ex (%docker_registry%)
 #4 : build branch ex (%teamcity.build.branch%)
 #####################################################################
-sudo pip install shyaml
-ls -lisa
-image_name=$(cat artifact/docker/artifact.yml | shyaml get-value image_name)
+sudo pip install shyaml -q
+image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 docker login $2 https://$3
 tag=$(sh utils/docker/extract_tag.sh $4)
 echo "##teamcity[progressMessage 'fetching $3/$1:$tag']"
