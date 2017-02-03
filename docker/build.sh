@@ -2,8 +2,7 @@
 # Log into docker registry
 docker login -u %docker_login% -p "%docker_password%" https://%docker_registry%
 imagename=$1
-chmod +x ./extract_tag.sh
-tag=$(echo ./extract_tag.sh "%teamcity.build.branch%")
+tag=$(echo ./utils/extract_tag.sh "%teamcity.build.branch%")
 # Move artifacts into this directory
 cd %system.teamcity.build.checkoutDir%/artifacts
 # update teamcity progress bar
