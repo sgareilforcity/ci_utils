@@ -10,4 +10,5 @@ sudo apt-cache show python3
 sudo apt-get install python3=3.5.1* -yqq
 sudo apt-get install postgresql -yqq
 sudo pip install -r requirements.txt
+sudo pip install shyaml -q
 echo "------------------------------"

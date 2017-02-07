@@ -14,7 +14,6 @@ for imagename in $catalog; do
             version=$(echo "$dependency_branch" | sed "s,release/,,g" | sed "s,/,-,g")
             tags="$version"
             echo "Processing $imagename:$tags...."
-
         fi
         for tag in $tags; do
             echo "Pushing %docker_registry%/$imagename:$tag"

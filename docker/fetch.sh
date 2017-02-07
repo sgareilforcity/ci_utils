@@ -6,8 +6,6 @@
 #3 : registry docker ex (%docker_registry%)
 #4 : build branch ex (%teamcity.build.branch%)
 #####################################################################
-ls -lisa
-sudo pip install shyaml -q
 image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 docker login $2 https://$3
 tag=$(sh utils/docker/extract_tag.sh $4)
@@ -18,3 +16,6 @@ if [ "$result" != "0" ]; then
     echo "##teamcity[message text='Error while fetching image $imagename' errorDetails='Error while fetching image $imagename' status='WARN']"
 fi
 exit 0
+
+
+python trufflehog.py git@github.com:sgareilforcity/template_ci.git /refs/heads/master
