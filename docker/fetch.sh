@@ -12,12 +12,8 @@ docker login $2 https://$3
 tag=$(sh utils/docker/extract_tag.sh $4)
 echo "##teamcity[progressMessage 'fetching $3/$1:$tag']"
 docker pull $3/$1:$tag
-result=$?
-if [ "$result" != "0" ]; then
-    echo "##teamcity[message text='Error while fetching image $imagename' errorDetails='Error while fetching image $imagename' status='WARN']"
-fi
+sh utils/teamcity/teamcity_error.sh
 exit 0
 
 
-python trufflehog.py git@github.com:sgareilforcity/template_ci.git /refs/heads/master
-python git-pull-request.py -r sgareilforcity/template_ci  -t b0bfb52f02ff7f99526d7184f3ea23ae7c889852 -b refs/heads/release-candidate -n /refs/heads/master
+

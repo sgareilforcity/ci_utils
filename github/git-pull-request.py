@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-
+#python git-pull-request.py -r sgareilforcity/template_ci  -t b0bfb52f02ff7f99526d7184f3ea23ae7c889852 -b refs/heads/release-candidate -n /refs/heads/master
 """git pull-request
 
 Automatically check out github pull requests into their own branch.

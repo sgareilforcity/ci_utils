@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+#python trufflehog.py git@github.com:sgareilforcity/template_ci.git /refs/heads/master
 import shutil
 import sys
 import math

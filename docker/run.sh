@@ -1,7 +1,4 @@
 #!/bin/bash
-#
-
-
 if [ -d "%teamcity.build.checkoutDir%/ci-test" ]; then
 sudo easy_install -U pip
 sudo pip install --upgrade pip
