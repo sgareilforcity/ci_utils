@@ -110,12 +110,15 @@ def main():
         print "the full repository name (user/repo), or configure it using"
         print "git config github.repo <user>/<repository>"
         sys.exit(418)
-
-    if (number != None and number != '' and number.startswith("refs/pull")):
-        number = filter(str.isdigit, number)
-        if(number == ''):
-            print "not a pull request detected : %s " % number
-            sys.exit(0)
+    if (number.startswith("refs/pull")) :
+        if (number != None and number != '' and number.startswith("refs/pull")):
+            number = filter(str.isdigit, number)
+            if(number == ''):
+                print "not a good pull request number !"
+                sys.exit(500)
+    else :
+        print number
+        sys.exit(0)
 
     # process arguments
     ret = show(repo, token, base, number)
@@ -126,28 +129,20 @@ def main():
 def display(pr,base):
     """Nicely display info about a given pull request
     """
-    result = 0
     print "%s - %s" % (color_text('REQUEST %s' % pr.get('number'), 'green'), pr.get('title'))
     print "    pull request of %s" % (color_text(pr['head']['label'], 'yellow'))
     print "    by %s %s" % (pr['user'].get('login'), color_text(pr.get('created_at')[:10], 'red'))
     print "    on base %s " % (color_text(pr['base']['label'], 'yellow'))
     print "    %s" % (color_text(pr.get('html_url'), 'blue'))
-    print "base validity : %s " % (pr['base']['ref'] == base or base is None)
-    print "state validity : %s " % (pr['state'] == "open")
-    if(base is not None and pr['base']['ref'] != base):
-        result += 5
-    if (pr['state'] != "open"):
-        result += 5
-    print "validity : %s " % (result)
-    return result
+    return 0
 
 def show(repo, token, base, number):
     """List open pull requests
 
     Queries the github API for open pull requests in the current repo
     """
-    print "loading open pull requests for %s..." % (repo)
-    print
+    # print "loading open pull requests for %s..." % (repo)
+    # print
     url = "https://api.github.com/repos/%s/pulls" % (repo)
 
     if len(token):
@@ -164,7 +159,7 @@ def show(repo, token, base, number):
         if msg.code == 404:
             # GH replies with 404 when a repo is not found or private and we request without OAUTH
             print "if this is a private repo, please set github.token to a valid GH oauth token"
-        exit(1)
+        exit(404)
 
     data = response.read()
     if (data == ''):
@@ -174,15 +169,20 @@ def show(repo, token, base, number):
     data = json.loads(data)
     # print json.dumps(data,sort_keys=True, indent=4)
     founded = str(number) == str("refs/heads/master") or str(number) == str("refs/heads/release-candidate") or number.startswith("refs/tags/")
-    print "pullrequest number param : %s " % number
+    #print "pullrequest number param : %s " % number
     for pr in data:
-        print "pullrequest number git : %s "  % pr['number']
-        founded |= display(pr,base)==0 and str(pr['number']) == str(number)
+        #print "pullrequest number git : %s "  % pr['number']
+        if str(pr['number']) == str(number) :
+            result = 0
+            if (base is not None and pr['base']['ref'] != base):
+                result += 5
+            if (pr['state'] != "open"):
+                result += 5
+            print "refs/heads/%s" % pr['head']['ref']
+            return result
 
-    if founded:
-        print "a good Pull Request existing."
-        return 0
-    else:
+
+    if not founded:
         print "No open pull request %s " % number
         print "on the repository %s is existing." % repo
         return 418
