@@ -12,8 +12,8 @@ docker login $2 https://$3
 tag=$(sh utils/docker/extract_tag.sh $4)
 echo "##teamcity[progressMessage 'fetching $3/$1:$tag']"
 docker pull $3/$1:$tag
-sh utils/teamcity/teamcity_error.sh
-exit 0
+sh utils/teamcity/teamcity_error.sh $? 0
+
 
 
 

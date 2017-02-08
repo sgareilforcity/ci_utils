@@ -1,4 +1,4 @@
 #!/bin/bash
-mkdir -p utils/docker
-unzip -d utils/docker utils.zip
+mkdir -p utils
+unzip -d utils utils.zip
 rm utils.zip

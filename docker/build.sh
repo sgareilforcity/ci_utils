@@ -13,9 +13,5 @@ imagename=$(cat docker/artifact.yml | shyaml get-value image.name)
 echo "##teamcity[progressMessage 'Building image $3/$imagename:$tag']"
 docker build -t $3/$imagename:$tag -f  docker/Dockerfile .
 result=$?
-if [ "$result" != "0" ]; then
-    echo "##teamcity[message text='Error while building image $imagename' errorDetails='Error while building image $imagename' status='ERROR']"
-    echo "Error while building $imagename"
-    exit 418
-fi
 cd ..
+sh utils/teamcity/teamcity_error.sh $result 418
