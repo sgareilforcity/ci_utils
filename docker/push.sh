@@ -8,7 +8,7 @@ image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 docker login $1 https://$2
 tag=$(sh utils/docker/extract_tag.sh $3)
 cd artifacts
-docker push $2/$imagename:$tag
+docker push $2/image_name:$tag
 result=$?
 cd ..
 sh utils/teamcity/teamcity_error.sh $? 1 ERROR
