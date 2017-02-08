@@ -11,9 +11,9 @@ version=$(echo $1 | sed "s,/refs,refs,g" | sed "s,refs/heads/,,g" | sed "s,refs/
 #master args exception
 if [ $version = "master" ]; then
     if [ -z $2 ]; then
-       version= "latest"
+       version='latest'
     else
-        version=$2
+       version=$2
     fi
 fi
 
