@@ -9,8 +9,8 @@ image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 docker login $1 https://$2
 tag=$(sh utils/docker/extract_tag.sh $3)
 cd artifacts
-echo "##teamcity[progressMessage 'Building image $2/$imagename:$tag']"
-docker build -t $2/$imagename:$tag -f  docker/Dockerfile .
+echo "##teamcity[progressMessage 'Building image $2/$image_name:$tag']"
+docker build -t $2/$image_name:$tag -f  docker/Dockerfile .
 result=$?
 cd ..
 sh utils/teamcity/teamcity_error.sh $result 418
