@@ -6,7 +6,6 @@
 #3 : registry docker ex (%docker_registry%)
 #4 : build branch ex (%teamcity.build.branch%)
 #####################################################################
-sh utils/teamcity/extract_utils.sh
 image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 docker login $2 https://$3
 tag=$(sh utils/docker/extract_tag.sh $4)
