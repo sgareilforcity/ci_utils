@@ -13,7 +13,7 @@ tag=$(sh utils/docker/extract_tag.sh $1)
 
 echo "##teamcity[progressMessage 'pull requesting on Master of $1']"
 
-if [ $1 = $release ]; then
+if[ $1 = $release ]; then
     curl post -H "Content-Type: application/json" -H "authToken: $3"  --data '{
       "title": "Amazing new feature",
       "body": "Please pull this in!",
