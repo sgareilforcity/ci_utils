@@ -1,7 +1,7 @@
 #!/bin/bash
 # pull request on github of release-candidate to master
 # utils/github/pull_request.sh
-# exemple :sh fetch.sh -u teamcity -p ******* registry-v2.forcity.io refs/tags/1.0.0-alpha
+# exemple :sh github/pull_request.sh refs/heads/release-candidate sgareilforcity/template_ci 200abde19f7a29f7f1026ca03a80d6b02339425f
 ####################################################################
 #1 : build branch ex (%teamcity.build.branch%)
 #2 : repo git ex (sgareilforcity/template_ci)
@@ -14,7 +14,7 @@ branch="$1"
 
 echo "##teamcity[progressMessage 'pull requesting on Master of $branch']"
 
-if[ $branch == $release ]; then
+if [ $branch = $release ]; then
     curl -b cookie -X post -H "Content-Type: application/json" -H "authToken: $3"  --data '{
       "title": "Amazing new feature",
       "body": "Please pull this in!",

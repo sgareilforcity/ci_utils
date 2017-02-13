@@ -1,0 +1,4 @@
+image :
+    name : "platform/ci/template"
+    default_tag : '1.0.0-rc-12'
+    deps : "nameko"
