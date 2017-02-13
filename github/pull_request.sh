@@ -10,10 +10,11 @@
 release="refs/heads/release-candidate"
 image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 tag=$(sh utils/docker/extract_tag.sh $1)
+branch="$1"
 
-echo "##teamcity[progressMessage 'pull requesting on Master of $1']"
+echo "##teamcity[progressMessage 'pull requesting on Master of $branch']"
 
-if[ $1 = $release ]; then
+if[ $branch = $release ]; then
     curl -b cookie -X post -H "Content-Type: application/json" -H "authToken: $3"  --data '{
       "title": "Amazing new feature",
       "body": "Please pull this in!",
