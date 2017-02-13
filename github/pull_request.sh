@@ -7,7 +7,7 @@
 #2 : repo git ex (sgareilforcity/template_ci)
 #3 : access token git
 #####################################################################
-release = "refs/heads/release-candidate"
+release="refs/heads/release-candidate"
 image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 tag=$(sh utils/docker/extract_tag.sh $1)
 
