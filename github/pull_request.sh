@@ -1,7 +1,7 @@
 #!/bin/bash
 # pull request on github of release-candidate to master
 # utils/github/pull_request.sh
-# exemple :sh github/pull_request.sh refs/heads/release-candidate sgareilforcity/template_ci 200abde19f7a29f7f1026ca03a80d6b02339425f
+# exemple :sh github/pull_request.sh refs/heads/release-candidate sgareilforcity/template_ci 200a-7a29f7f1-0d6b02339425f
 ####################################################################
 #1 : build branch ex (%teamcity.build.branch%)
 #2 : repo git ex (sgareilforcity/template_ci)
