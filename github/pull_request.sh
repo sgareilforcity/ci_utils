@@ -14,7 +14,7 @@ branch="$1"
 
 echo "##teamcity[progressMessage 'pull requesting on Master of $branch']"
 
-if[ $branch = $release ]; then
+if[ $branch == $release ]; then
     curl -b cookie -X post -H "Content-Type: application/json" -H "authToken: $3"  --data '{
       "title": "Amazing new feature",
       "body": "Please pull this in!",
