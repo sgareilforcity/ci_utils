@@ -7,16 +7,18 @@
 #2 : repo git ex (sgareilforcity/template_ci)
 #3 : access token git
 #####################################################################
+release = "refs/heads/release-candidate"
 image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 tag=$(sh utils/docker/extract_tag.sh $1)
+
 echo "##teamcity[progressMessage 'pull requesting on Master of $1']"
-release = "refs/heads/release-candidate"
-if[ $1 = $release ];then
-curl post -H "Content-Type: application/json" -H "authToken: $3"  --data '{
-  "title": "Amazing new feature",
-  "body": "Please pull this in!",
-  "head": "release-candidate",
-  "base": "master"
-}' https://github.com/api/repos/$2/pulls
+
+if [ $1 = $release ]; then
+    curl post -H "Content-Type: application/json" -H "authToken: $3"  --data '{
+      "title": "Amazing new feature",
+      "body": "Please pull this in!",
+      "head": "release-candidate",
+      "base": "master"
+    }' https://github.com/api/repos/$2/pulls
 fi
 exit 0
