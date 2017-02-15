@@ -5,13 +5,14 @@
 #2 : registry docker ex (%docker_registry%)
 #3 : build branch ex (%teamcity.build.branch%)
 #####################################################################
+echo "############################## begin fetch ###############################"
 image_name=$(cat artifacts/docker/artifact.yml | shyaml get-value image.name)
 docker login $1 https://$2
 tag=$(sh utils/docker/extract_tag.sh $3)
 echo "##teamcity[progressMessage 'fetching $2/$image_name:$tag']"
 docker pull $2/$image_name:$tag
 sh utils/teamcity/teamcity_error.sh $? 0
-
+echo "############################## end fetch #################################"
 
 
 
