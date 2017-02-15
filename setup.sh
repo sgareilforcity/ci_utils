@@ -10,5 +10,6 @@ sudo apt-get install python3.5 -yqq
 sudo apt-get install postgresql -yqq
 sudo apt-get install zip -yqq
 sudo apt-get install unzip -yqq
+sudo apt-get install wget -yqq
 sudo pip install -r requirements.txt
 echo "------------------------------"
