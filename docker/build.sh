@@ -10,7 +10,8 @@ docker login $1 https://$2
 tag=$(sh utils/docker/extract_tag.sh $3)
 cd artifacts
 echo "##teamcity[progressMessage 'Building image $2/$image_name:$tag']"
-docker build -t $2/$image_name:$tag -f  docker/Dockerfile .
+docker build -t $2/$image_name:$tag -f  docker/Dockerfile . > $image_name-$tag.txt
+echo "##teamcity[publishArtifacts 'build_log/$image_name-$tag.txt']"
 result=$?
 cd ..
 sh utils/teamcity/teamcity_error.sh $result 418

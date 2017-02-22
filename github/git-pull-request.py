@@ -170,18 +170,14 @@ def show(repo, token, base, number):
     # print json.dumps(data,sort_keys=True, indent=4)
     founded = str(number) == str("refs/heads/master") or str(number) == str("refs/heads/release-candidate") or number.startswith("refs/tags/")
     #print "pullrequest number param : %s " % number
+    head_ref=''
     for pr in data:
-        #print "pullrequest number git : %s "  % pr['number']
+        #check "pullrequest number git : %s "  % pr['number']
         if str(pr['number']) == str(number) :
-            result = 0
-            if (base is not None and pr['base']['ref'] != base):
-                result += 5
-            if (pr['state'] != "open"):
-                result += 5
             print "refs/heads/%s" % pr['head']['ref']
-            return result
-
-
+            if base is not None and pr['base']['ref'] != base and pr['base']['ref'] != "master" or pr['state'] != "open":
+                return 418
+            return 0
     if not founded:
         print "No open pull request %s " % number
         print "on the repository %s is existing." % repo
